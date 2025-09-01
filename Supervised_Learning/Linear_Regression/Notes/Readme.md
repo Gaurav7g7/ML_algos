@@ -1,524 +1,77 @@
+We want to predict a target variable y (here: car price) using features x (like age, mileage, trim, etc.):
 
-Linear Regression Model
-
-We want to predict a target variable 
-𝑦
-y (here: car price) using features 
-𝑥
-x (like age, mileage, trim, etc.).
-
-𝑦
-=
-𝛽
-0
-+
-𝛽
-1
-𝑥
-1
-+
-𝛽
-2
-𝑥
-2
-+
-⋯
-+
-𝛽
-𝑛
-𝑥
-𝑛
-y=β
-0
-	​
-
-+β
-1
-	​
-
-x
-1
-	​
-
-+β
-2
-	​
-
-x
-2
-	​
-
-+⋯+β
-n
-	​
-
-x
-n
-	​
+y = β0 + β1·x1 + β2·x2 + … + βn·xn
 
 
-𝑦
-y: the actual value (car price in dataset).
+y: the actual value (car price in dataset)
 
-𝑦
-^
-y
-^
-	​
+ŷ: the predicted value (our model’s guess)
 
-: the predicted value (our model’s guess).
+β0: the intercept (baseline value when all features are 0)
 
-𝛽
-0
-β
-0
-	​
+β1, β2, …, βn: the coefficients (weights) — how much each feature contributes to price
 
-: the intercept (baseline value when all features are 0).
+x1, x2, …, xn: the input features (age, mileage, LE_flag, Hybrid_flag, etc.)
 
-𝛽
-1
-,
-𝛽
-2
-,
-…
-,
-𝛽
-𝑛
-β
-1
-	​
+n: number of features
 
-,β
-2
-	​
-
-,…,β
-n
-	​
-
-: the coefficients (weights) — how much each feature contributes to price.
-
-𝑥
-1
-,
-𝑥
-2
-,
-…
-,
-𝑥
-𝑛
-x
-1
-	​
-
-,x
-2
-	​
-
-,…,x
-n
-	​
-
-: the input features (age, mileage, LE_flag, Hybrid_flag, etc.).
-
-𝑛
-n: number of features.
-
-𝑚
-m: number of data points (cars in dataset).
+m: number of data points (cars in dataset)
 
 👉 Example (car price):
 
-Price
-=
-𝛽
-0
-+
-𝛽
-1
-⋅
-Age
-+
-𝛽
-2
-⋅
-Mileage
-+
-𝛽
-3
-⋅
-LE Flag
-+
-𝛽
-4
-⋅
-Hybrid Flag
-Price=β
-0
-	​
+Price = β0 + β1·Age + β2·Mileage + β3·LE_Flag + β4·Hybrid_Flag
 
-+β
-1
-	​
-
-⋅Age+β
-2
-	​
-
-⋅Mileage+β
-3
-	​
-
-⋅LE Flag+β
-4
-	​
-
-⋅Hybrid Flag
-🔹 Cost Function (MSE)
+Cost Function (MSE)
 
 We measure how wrong our predictions are using Mean Squared Error:
 
-𝐽
-(
-𝛽
-)
-=
-1
-𝑚
-∑
-𝑖
-=
-1
-𝑚
-(
-𝑦
-^
-(
-𝑖
-)
-−
-𝑦
-(
-𝑖
-)
-)
-2
-J(β)=
-m
-1
-	​
-
-i=1
-∑
-m
-	​
-
-(
-y
-^
-	​
-
-(i)
-−y
-(i)
-)
-2
-
-𝐽
-(
-𝛽
-)
-J(β): the cost (error of the model).
-
-𝑦
-(
-𝑖
-)
-y
-(i)
-: the actual price of car 
-𝑖
-i.
-
-𝑦
-^
-(
-𝑖
-)
-y
-^
-	​
-
-(i)
-: the predicted price of car 
-𝑖
-i.
-
-𝑚
-m: total number of cars (rows).
-
-👉 Intuition: The smaller 
-𝐽
-(
-𝛽
-)
-J(β), the better our model fits.
-
-🔹 Prediction Function
-
-For each car 
-𝑖
-i:
-
-𝑦
-^
-(
-𝑖
-)
-=
-𝛽
-0
-+
-∑
-𝑗
-=
-1
-𝑛
-𝛽
-𝑗
-𝑥
-𝑗
-(
-𝑖
-)
-y
-^
-	​
-
-(i)
-=β
-0
-	​
-
-+
-j=1
-∑
-n
-	​
-
-β
-j
-	​
-
-x
-j
-(i)
-	​
+J(β) = (1/m) Σ (ŷ(i) - y(i))²
 
 
-𝑦
-^
-(
-𝑖
-)
-y
-^
-	​
+J(β): the cost (error of the model)
 
-(i)
-: predicted price for car 
-𝑖
-i.
+y(i): the actual price of car i
 
-𝑥
-𝑗
-(
-𝑖
-)
-x
-j
-(i)
-	​
+ŷ(i): the predicted price of car i
 
-: value of feature 
-𝑗
-j for car 
-𝑖
-i.
+m: total number of cars (rows)
 
-𝛽
-𝑗
-β
-j
-	​
+👉 Intuition: The smaller J(β), the better our model fits.
 
-: weight assigned to feature 
-𝑗
-j.
+Prediction Function
 
-🔹 Gradient Descent Updates
+For each car i:
 
-We improve the coefficients step by step to minimize 
-𝐽
-(
-𝛽
-)
-J(β).
-
-𝛽
-𝑗
-=
-𝛽
-𝑗
-−
-𝛼
-⋅
-∂
-𝐽
-∂
-𝛽
-𝑗
-β
-j
-	​
-
-=β
-j
-	​
-
-−α⋅
-∂β
-j
-	​
-
-∂J
-	​
+ŷ(i) = β0 + Σ βj·xj(i)
 
 
-𝛽
-𝑗
-β
-j
-	​
+ŷ(i): predicted price for car i
 
-: the current weight for feature 
-𝑗
-j.
+xj(i): value of feature j for car i
 
-𝛼
-α: the learning rate (step size — too big = overshoot, too small = slow).
+βj: weight assigned to feature j
 
-∂
-𝐽
-∂
-𝛽
-𝑗
-∂β
-j
-	​
+Gradient Descent Updates
 
-∂J
-	​
+We improve the coefficients step by step to minimize J(β):
 
-: the gradient (slope of cost function with respect to 
-𝛽
-𝑗
-β
-j
-	​
-
-).
-
-🔹 Gradient Formula
-∂
-𝐽
-∂
-𝛽
-𝑗
-=
-2
-𝑚
-∑
-𝑖
-=
-1
-𝑚
-(
-𝑦
-^
-(
-𝑖
-)
-−
-𝑦
-(
-𝑖
-)
-)
-𝑥
-𝑗
-(
-𝑖
-)
-∂β
-j
-	​
-
-∂J
-	​
-
-=
-m
-2
-	​
-
-i=1
-∑
-m
-	​
-
-(
-y
-^
-	​
-
-(i)
-−y
-(i)
-)x
-j
-(i)
-	​
+βj = βj - α · (∂J/∂βj)
 
 
-Measures how much feature 
-𝑗
-j contributes to the error.
+βj: the current weight for feature j
 
-If gradient is positive → decrease 
-𝛽
-𝑗
-β
-j
-	​
+α: the learning rate (step size — too big = overshoot, too small = slow)
 
-.
+∂J/∂βj: the gradient (slope of cost function with respect to βj)
 
-If gradient is negative → increase 
-𝛽
-𝑗
-β
-j
-	​
+Gradient Formula
+∂J/∂βj = (2/m) Σ (ŷ(i) - y(i))·xj(i)
 
-.
 
-Repeat until 
-𝐽
-(
-𝛽
-)
-J(β) is minimized.
+Measures how much feature j contributes to the error
+
+If gradient is positive → decrease βj
+
+If gradient is negative → increase βj
+
+Repeat until J(β) is minimized
